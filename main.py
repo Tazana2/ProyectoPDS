@@ -1,12 +1,9 @@
 import face_recognition
 import cv2
 
-daniel = cv2.imread("Faces/Daniel.jpg")
-samuel = cv2.imread("Faces/Samuel.jpg")
-faces = [daniel, samuel]
-names = ["Daniel", "Samuel"]
+faces = [cv2.imread("Faces/Daniel.jpg"), cv2.imread("Faces/Samuel.jpg"), cv2.imread("Faces/Felipe.jpg")]
+names = ["Daniel", "Samuel", "Felipe"]
 
-# felipe = cv2.imread("Faces/Felipe.jpg")
 savedFaces = []
 for i in faces:
     savedFaces.append(face_recognition.face_encodings(i, known_face_locations=[face_recognition.face_locations(i)[0]])[0])
