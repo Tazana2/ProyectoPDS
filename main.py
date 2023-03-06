@@ -87,13 +87,13 @@ class App(CTk):
             cv2.imwrite(f".\Faces\{self.nameText.get()}.jpg", cv2.flip(self.vid.read()[1], 1))
             self.closeTopLevel()
             messagebox.showinfo(
-                message="Te has registrado con éxito! :D",
+                message="¡Te has registrado con éxito!",
                 title="Registro completado"
             )
         except:
             self.closeTopLevel()
             messagebox.showerror(
-                message="Ha ocurrido al registrate. Revisa tu cámara o el campo del nombre (Recuerda que no puede tener cáracteres especiales) y vuelve a intentar D:" ,
+                message="Ha ocurrido al registrarte. Revisa tu cámara o el campo del nombre (Recuerda que no puede tener caracteres especiales) y vuelve a intentar." ,
                 title="Error:"
             )
 
@@ -105,7 +105,7 @@ class App(CTk):
         except:
             self.closeTopLevel()
             messagebox.showerror(
-                message="Ha ocurrido un error al detectar tu dispositivo de video. Revisalo y vuelve a intentar.",
+                message="Ha ocurrido un error al detectar tu dispositivo de video. Revísalo y vuelve a intentar.",
                 title="Error:"
             )
 
@@ -127,7 +127,7 @@ class App(CTk):
         except:
             self.closeTopLevel()
             messagebox.showerror(
-                message="Ha ocurrido un error al detectar tu dispositivo de video. Revisalo y vuelve a intentar.",
+                message="Ha ocurrido un error al detectar tu dispositivo de video. Revísalo y vuelve a intentar.",
                 title="Error:"
             )
 
@@ -149,7 +149,7 @@ class App(CTk):
         if self.nameText.get() != "": self.createTopLevel(whatIsfor="Register")
         else:
             messagebox.showerror(
-                message="Tienes que ingresar toda la información para registrarte",
+                message="Tienes que ingresar toda la información para registrarte.",
                 title="Error:"
             )
 
@@ -167,13 +167,13 @@ class App(CTk):
             else:
                 self.closeTopLevel()
                 messagebox.showerror(
-                    message="Usted no está registrado o no se le pudo reconocer",
+                    message="Usted no está registrado o no se le pudo reconocer.",
                     title="Error:"
                 )
         except:
             self.closeTopLevel()
             messagebox.showerror(
-                message="Ha ocurrido un error al realizar la autenticación",
+                message="Ha ocurrido un error al realizar la autenticación.",
                 title="Error:"
             )
 
