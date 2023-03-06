@@ -2,7 +2,6 @@ import face_recognition
 import cv2
 import os
 
-
 class FaceRecognition:
     def __init__(self, path="", names=[], savedFaces=[]):
         self.names = names

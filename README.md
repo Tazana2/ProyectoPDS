@@ -2,11 +2,13 @@
 
 Espacio para el desarrollo del proyecto de Principios de desarrollo de software
 
-## Librerias para el proyecto: 
-
+## Librerias para el proyecto
+Librerias requeridas para la parte del reconocimiento facial:
 `face_recognition` y `opencv-python`
+Librerias requeridas para la parte visual:
+`tkitner` y `customtkitner`
 
-## Instalación:
+## Instalación
 
 (En la consola)
 
