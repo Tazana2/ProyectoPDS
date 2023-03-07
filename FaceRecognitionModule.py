@@ -9,7 +9,6 @@ class FaceRecognition:
         self.savedFaces = savedFaces
         self.cap = cap
 
-
     def save_info(self):
         self.names = [name[:name.index('.')] for name in os.listdir(self.path)]
         faces = [cv2.imread(os.path.join(self.path, image)) for image in os.listdir(self.path)]
