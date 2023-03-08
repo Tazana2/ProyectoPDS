@@ -4,8 +4,7 @@ from PIL import Image, ImageTk
 from customtkinter import *
 import cv2
 
-
-from FaceRecognitionModule import FaceRecognition
+from modules.FaceRecognitionModule import FaceRecognition
 
 
 class App(CTk):
@@ -84,7 +83,7 @@ class App(CTk):
 
     def take_photo_register(self):
         try:
-            cv2.imwrite(f".\Faces\{self.nameText.get()}.jpg", cv2.flip(self.vid.read()[1], 1))
+            cv2.imwrite(f".\data\{self.nameText.get()}.jpg", cv2.flip(self.vid.read()[1], 1))
             self.closeTopLevel()
             messagebox.showinfo(
                 message="¡Te has registrado con éxito!",
@@ -155,7 +154,7 @@ class App(CTk):
 
     def startAuthentication(self):
         try:
-            m = FaceRecognition(path=".\\Faces", cap=self.vid)
+            m = FaceRecognition(path=".\\data", cap=self.vid)
             m.save_info()
             name = m.start_recognition()
             if name in m.names:
