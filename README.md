@@ -11,16 +11,10 @@ Librerias requeridas para la parte visual:
 
 ## Instalación
 
-(En la consola)
+(En la consola/terminal)
 
-Face Recognition
 ```sh
--m pip install face_recognition
+-m pip install -r requirements.txt
 ```
 
-OpenCV
-```sh
--m pip install opencv-python
-```
-
-No es necesario un entorno virtual pero se puede utilizar. Se recomienda usar Python 3.10.
+No es necesario un entorno virtual, pero es mejor si se usa uno. Se recomienda usar Python 3.10.
