@@ -3,6 +3,7 @@ from tkinter import messagebox
 from PIL import Image, ImageTk
 from customtkinter import *
 import cv2
+import platform
 
 from modules.FaceRecognitionModule import FaceRecognition
 
@@ -14,6 +15,11 @@ class App(CTk):
         self.geometry("600x600")
         self.bind('<Escape>', lambda e: self.quit())
         self.vid = None
+        system = platform.system()
+        if system == "Linux":
+            self.sysPath = "./data"
+        elif system == "Windows":
+            self.sysPath = ".\\data"
 
         self.frame = CTkFrame(self)
         self.frame.pack(pady=40, padx=50, fill="both", expand=True)
@@ -58,7 +64,7 @@ class App(CTk):
     def createTopLevel(self, whatIsfor=""):
         self.nwWindow = CTkToplevel(self)
         self.nwWindow.title("Authentication")
-        self.nwWindow.geometry("550x550")
+        self.nwWindow.geometry("600x600")
         if whatIsfor == "Register":
             self.registerWin()
         elif whatIsfor == "Login":
@@ -83,7 +89,7 @@ class App(CTk):
 
     def take_photo_register(self):
         try:
-            cv2.imwrite(f".\data\{self.nameText.get()}.jpg", cv2.flip(self.vid.read()[1], 1))
+            cv2.imwrite(f"{self.sysPath}\{self.nameText.get()}.jpg", cv2.flip(self.vid.read()[1], 1))
             self.closeTopLevel()
             messagebox.showinfo(
                 message="¡Te has registrado con éxito!",
@@ -98,7 +104,7 @@ class App(CTk):
 
     def registerWin(self):
         try:
-            self.vid = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+            self.vid = cv2.VideoCapture(0)
             self.vid.set(cv2.CAP_PROP_FRAME_WIDTH, 500)
             self.vid.set(cv2.CAP_PROP_FRAME_HEIGHT, 400)
         except:
@@ -120,7 +126,7 @@ class App(CTk):
 
     def loginWin(self):
         try:
-            self.vid = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+            self.vid = cv2.VideoCapture(0)
             self.vid.set(cv2.CAP_PROP_FRAME_WIDTH, 500)
             self.vid.set(cv2.CAP_PROP_FRAME_HEIGHT, 400)
         except:
@@ -154,7 +160,7 @@ class App(CTk):
 
     def startAuthentication(self):
         try:
-            m = FaceRecognition(path=".\\data", cap=self.vid)
+            m = FaceRecognition(path=self.sysPath, cap=self.vid)
             m.save_info()
             name = m.start_recognition()
             if name in m.names:
