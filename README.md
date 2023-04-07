@@ -14,15 +14,15 @@ Librerias requeridas para la parte visual:
 (En la consola/terminal)
 
 ```sh
-python3 -m pip install CMake
+pip install CMake
 ```
 
 ```sh
-python3 -m pip install dlib
+pip install dlib
 ```
 
 ```sh
-python3 -m pip install -r requirements.txt
+pip install -r requirements.txt
 ```
 
 No es necesario un entorno virtual, pero es mejor si se usa uno. Se recomienda usar Python 3.10.
