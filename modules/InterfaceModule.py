@@ -7,14 +7,16 @@ import platform
 
 from modules.FaceRecognitionModule import FaceRecognition
 
-
 class App(CTk):
     def __init__(self):
         super().__init__()
         self.title("Face Recoginition Project")
-        self.geometry("600x600")
+        self.geometry("600x600+300+500")
+        self.eval('tk::PlaceWindow . center')
         self.bind('<Escape>', lambda e: self.quit())
         self.vid = None
+        self.myFont = "Arial"
+
         system = platform.system()
         if system == "Linux":
             self.sysPath = "./data"
@@ -24,7 +26,8 @@ class App(CTk):
         self.frame = CTkFrame(self)
         self.frame.pack(pady=40, padx=50, fill="both", expand=True)
 
-        self.main_title = CTkLabel(self.frame, text="¡Bienvenido!", font=("Monocraft", 28)).pack(pady=20)
+        self.main_title = CTkLabel(self.frame, text="¡Bienvenido!", font=(self.myFont, 28))
+        self.main_title.pack(pady=20)
 
         self.container_register = CTkFrame(self.frame)
         self.container_register.pack(pady=15, padx=20, fill="both", expand=True)
@@ -33,38 +36,37 @@ class App(CTk):
         self.container_login.pack(pady=15, padx=20, fill="both", expand=True)
 
 
-        self.label1 = CTkLabel(self.container_register, text="Registrate", font=("Monocraft", 20))
+        self.label1 = CTkLabel(self.container_register, text="Registrate", font=(self.myFont, 20))
         self.label1.pack(pady=25)
-
         self.nameText = Variable()
         self.entry_name = CTkEntry(
             self.container_register, 
             textvariable=self.nameText, 
             placeholder_text="Escribe tu nombre", 
-            font=("Monocraft", 12)
+            font=(self.myFont, 12)
         )
         self.entry_name.pack(padx=100, fill="x")
 
         self.button_register = CTkButton(
             self.container_register,
             text="Registrate",
-            font=("Monocraft", 12),
+            font=(self.myFont, 12),
             command=self.checkNameEntry
         )
         self.button_register.pack(pady=10)
 
-
-        self.label2 = CTkLabel(self.container_login, text="Iniciar Sesión", font=("Monocraft", 20))
+        self.label2 = CTkLabel(self.container_login, text="Iniciar Sesión", font=(self.myFont, 20))
         self.label2.pack(pady=30)
 
-        self.button_login = CTkButton(self.container_login, text="Ingresar", font=("Monocraft", 12), command=self.bruh)
+        self.button_login = CTkButton(self.container_login, text="Ingresar", font=(self.myFont, 12), command=self.bruh)
         self.button_login.pack()
 
 
+    #  TopLevels Methods
     def createTopLevel(self, whatIsfor=""):
         self.nwWindow = CTkToplevel(self)
         self.nwWindow.title("Authentication")
-        self.nwWindow.geometry("600x600")
+        self.nwWindow.geometry(f"600x600+800+100")
         if whatIsfor == "Register":
             self.registerWin()
         elif whatIsfor == "Login":
@@ -89,7 +91,7 @@ class App(CTk):
 
     def take_photo_register(self):
         try:
-            cv2.imwrite(f"{self.sysPath}\{self.nameText.get()}.jpg", cv2.flip(self.vid.read()[1], 1))
+            cv2.imwrite(f"{self.sysPath}/{self.nameText.get()}.jpg", cv2.flip(self.vid.read()[1], 1))
             self.closeTopLevel()
             messagebox.showinfo(
                 message="¡Te has registrado con éxito!",
@@ -117,10 +119,10 @@ class App(CTk):
         self.cam_widget = Label(self.nwWindow)
         self.cam_widget.pack(pady=20, padx=20)
 
-        capBtn = CTkButton(self.nwWindow, text="Tomar Foto", command=self.take_photo_register, font=("Monocraft", 12))
+        capBtn = CTkButton(self.nwWindow, text="Tomar Foto", command=self.take_photo_register, font=(self.myFont, 12))
         capBtn.pack(pady=10)
 
-        clBtn = CTkButton(self.nwWindow, text="Salir", command=self.closeTopLevel, font=("Monocraft", 12))
+        clBtn = CTkButton(self.nwWindow, text="Salir", command=self.closeTopLevel, font=(self.myFont, 12))
         clBtn.pack()
         self.openCamera()
 
@@ -129,6 +131,8 @@ class App(CTk):
             self.vid = cv2.VideoCapture(0)
             self.vid.set(cv2.CAP_PROP_FRAME_WIDTH, 500)
             self.vid.set(cv2.CAP_PROP_FRAME_HEIGHT, 400)
+            
+            self.authenticator = FaceRecognition(cap=self.vid, source=self.sysPath)
         except:
             self.closeTopLevel()
             messagebox.showerror(
@@ -139,31 +143,22 @@ class App(CTk):
         self.cam_widget = Label(self.nwWindow)
         self.cam_widget.pack(pady=20, padx=20)
 
-        label_recomendation = CTkLabel(self.nwWindow, text="Recuerda:\n\nEs mejor si estás en un lugar iluminado \ny con nadie más que tú en la cámara.", font=("Monocraft", 14))
+        label_recomendation = CTkLabel(self.nwWindow, text="Recuerda:\n\nEs mejor si estás en un lugar iluminado \ny con nadie más que tú en la cámara.", font=(self.myFont, 14))
         label_recomendation.pack(pady=10)
 
-        capBtn = CTkButton(self.nwWindow, text="Iniciar Reconocimiento", command=self.startAuthentication, font=("Monocraft", 12))
+        capBtn = CTkButton(self.nwWindow, text="Iniciar Reconocimiento", command=self.startAuthentication, font=(self.myFont, 12))
         capBtn.pack(pady=10)
 
-        clBtn = CTkButton(self.nwWindow, text="Salir", command=self.closeTopLevel, font=("Monocraft", 12))
+        clBtn = CTkButton(self.nwWindow, text="Salir", command=self.closeTopLevel, font=(self.myFont, 12))
         clBtn.pack()
 
         self.openCamera()
 
-    def checkNameEntry(self):
-        if self.nameText.get() != "": self.createTopLevel(whatIsfor="Register")
-        else:
-            messagebox.showerror(
-                message="Tienes que ingresar toda la información para registrarte.",
-                title="Error:"
-            )
-
     def startAuthentication(self):
         try:
-            m = FaceRecognition(path=self.sysPath, cap=self.vid)
-            m.save_info()
-            name = m.start_recognition()
-            if name in m.names:
+            self.authenticator.start_authentication()
+            name = self.authenticator.myName
+            if name in self.authenticator.authNames:
                 self.closeTopLevel()
                 messagebox.showinfo(
                     message=f"Bienvenido {name}",
@@ -182,5 +177,13 @@ class App(CTk):
                 title="Error:"
             )
 
+    def checkNameEntry(self):
+        if self.nameText.get() != "": self.createTopLevel(whatIsfor="Register")
+        else:
+            messagebox.showerror(
+                message="Tienes que ingresar toda la información para registrarte.",
+                title="Error:"
+            )
+            
     def bruh(self):
         self.createTopLevel(whatIsfor="Login")
