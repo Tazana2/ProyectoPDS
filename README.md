@@ -11,6 +11,7 @@ Librerias requeridas para la parte visual:
 
 ## Instalación
 
+No es necesario un entorno virtual, pero es mejor si se usa uno. Se recomienda usar Python 3.10.9.
 (En la consola/terminal)
 
 ```sh
@@ -35,6 +36,3 @@ pip install -r requirements.txt
 [python|python3] main.py
 ```
 En este caso depende del comando con el que se active python en el sistema (`python` o  `python3`).
-
-
-No es necesario un entorno virtual, pero es mejor si se usa uno. Se recomienda usar Python 3.10.9.

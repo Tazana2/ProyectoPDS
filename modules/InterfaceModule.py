@@ -8,6 +8,7 @@ import platform
 from modules.FaceRecognitionModule import FaceRecognition
 
 class App(CTk):
+    # Constructor
     def __init__(self):
         super().__init__()
         self.title("Face Recoginition Project")
@@ -66,7 +67,7 @@ class App(CTk):
     def createTopLevel(self, whatIsfor=""):
         self.nwWindow = CTkToplevel(self)
         self.nwWindow.title("Authentication")
-        self.nwWindow.geometry(f"600x600+800+100")
+        self.nwWindow.geometry("600x600+800+100")
         if whatIsfor == "Register":
             self.registerWin()
         elif whatIsfor == "Login":
@@ -79,6 +80,50 @@ class App(CTk):
         if self.vid:
             self.vid.release()
 
+    def registerWin(self):
+        try:
+            self.vid = cv2.VideoCapture(0)
+            self.vid.set(cv2.CAP_PROP_FRAME_WIDTH, 500)
+            self.vid.set(cv2.CAP_PROP_FRAME_HEIGHT, 400)
+        except:
+            self.closeTopLevel()
+            messagebox.showerror(
+                message="Ha ocurrido un error al detectar tu dispositivo de video. Revísalo y vuelve a intentar.",
+                title="Error:"
+            )
+        self.cam_widget = Label(self.nwWindow)
+        self.cam_widget.pack(pady=20, padx=20)
+
+        capBtn = CTkButton(self.nwWindow, text="Tomar Foto", command=self.takePhotoRegister, font=(self.myFont, 12))
+        capBtn.pack(pady=10)
+        clBtn = CTkButton(self.nwWindow, text="Salir", command=self.closeTopLevel, font=(self.myFont, 12))
+        clBtn.pack()
+        self.openCamera()
+
+    def loginWin(self):
+        try:
+            self.vid = cv2.VideoCapture(0)
+            self.vid.set(cv2.CAP_PROP_FRAME_WIDTH, 500)
+            self.vid.set(cv2.CAP_PROP_FRAME_HEIGHT, 400)
+        except:
+            self.closeTopLevel()
+            messagebox.showerror(
+                message="Ha ocurrido un error al detectar tu dispositivo de video. Revísalo y vuelve a intentar.",
+                title="Error:"
+            )
+        self.cam_widget = Label(self.nwWindow)
+        self.cam_widget.pack(pady=20, padx=20)
+
+        label_recomendation = CTkLabel(self.nwWindow, text="Recuerda:\n\nEs mejor si estás en un lugar iluminado \ny con nadie más que tú en la cámara.", font=(self.myFont, 14))
+        label_recomendation.pack(pady=10)
+        capBtn = CTkButton(self.nwWindow, text="Iniciar Reconocimiento", command=self.loginAuthentication, font=(self.myFont, 12))
+        capBtn.pack(pady=10)
+        clBtn = CTkButton(self.nwWindow, text="Salir", command=self.closeTopLevel, font=(self.myFont, 12))
+        clBtn.pack()
+        self.openCamera()
+
+
+    # Camera methods
     def openCamera(self):
         cv_image = cv2.flip(cv2.cvtColor(self.vid.read()[1], cv2.COLOR_BGR2RGBA), 1)
         captured_image = Image.fromarray(cv_image)
@@ -88,8 +133,7 @@ class App(CTk):
         self.cam_widget.configure(image=photo_image)
         self.cam_widget.after(10, self.openCamera)
 
-
-    def take_photo_register(self):
+    def takePhotoRegister(self):
         try:
             cv2.imwrite(f"{self.sysPath}/{self.nameText.get()}.jpg", cv2.flip(self.vid.read()[1], 1))
             self.closeTopLevel()
@@ -104,61 +148,14 @@ class App(CTk):
                 title="Error:"
             )
 
-    def registerWin(self):
+
+    # Athentications methods (This may change in the future)
+    def loginAuthentication(self):
         try:
-            self.vid = cv2.VideoCapture(0)
-            self.vid.set(cv2.CAP_PROP_FRAME_WIDTH, 500)
-            self.vid.set(cv2.CAP_PROP_FRAME_HEIGHT, 400)
-        except:
-            self.closeTopLevel()
-            messagebox.showerror(
-                message="Ha ocurrido un error al detectar tu dispositivo de video. Revísalo y vuelve a intentar.",
-                title="Error:"
-            )
-
-        self.cam_widget = Label(self.nwWindow)
-        self.cam_widget.pack(pady=20, padx=20)
-
-        capBtn = CTkButton(self.nwWindow, text="Tomar Foto", command=self.take_photo_register, font=(self.myFont, 12))
-        capBtn.pack(pady=10)
-
-        clBtn = CTkButton(self.nwWindow, text="Salir", command=self.closeTopLevel, font=(self.myFont, 12))
-        clBtn.pack()
-        self.openCamera()
-
-    def loginWin(self):
-        try:
-            self.vid = cv2.VideoCapture(0)
-            self.vid.set(cv2.CAP_PROP_FRAME_WIDTH, 500)
-            self.vid.set(cv2.CAP_PROP_FRAME_HEIGHT, 400)
-            
-            self.authenticator = FaceRecognition(cap=self.vid, source=self.sysPath)
-        except:
-            self.closeTopLevel()
-            messagebox.showerror(
-                message="Ha ocurrido un error al detectar tu dispositivo de video. Revísalo y vuelve a intentar.",
-                title="Error:"
-            )
-
-        self.cam_widget = Label(self.nwWindow)
-        self.cam_widget.pack(pady=20, padx=20)
-
-        label_recomendation = CTkLabel(self.nwWindow, text="Recuerda:\n\nEs mejor si estás en un lugar iluminado \ny con nadie más que tú en la cámara.", font=(self.myFont, 14))
-        label_recomendation.pack(pady=10)
-
-        capBtn = CTkButton(self.nwWindow, text="Iniciar Reconocimiento", command=self.startAuthentication, font=(self.myFont, 12))
-        capBtn.pack(pady=10)
-
-        clBtn = CTkButton(self.nwWindow, text="Salir", command=self.closeTopLevel, font=(self.myFont, 12))
-        clBtn.pack()
-
-        self.openCamera()
-
-    def startAuthentication(self):
-        try:
-            self.authenticator.start_authentication()
-            name = self.authenticator.myName
-            if name in self.authenticator.authNames:
+            authenticator = FaceRecognition(cap=self.vid, source=self.sysPath)
+            authenticator.authenticateFaces()
+            name = authenticator.myName
+            if name in authenticator.authNames:
                 self.closeTopLevel()
                 messagebox.showinfo(
                     message=f"Bienvenido {name}",
